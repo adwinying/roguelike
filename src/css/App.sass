@@ -1,0 +1,36 @@
+$cellsize: 1 / 60 * 100%
+
+.map-board
+  margin-top: 25px
+  max-width: 1000px
+  border: 1px solid #000
+  padding: 0
+  
+  table
+    width: 100%
+
+.map-row
+  width: 100%
+    
+.map-cell
+  height: 0
+  padding-top: $cellsize
+  background-color: #111
+  
+  &[data-val="0"]
+    opacity: 0
+  
+  &[data-val="2"]
+    background-color: red
+
+  &[data-val="3"]
+    background-color: gold
+
+  &[data-val="4"]
+    background-color: purple
+
+  &[data-val="5"]
+    background-color: blue
+
+  &[data-val="6"]
+    background-color: green
