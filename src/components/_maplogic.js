@@ -56,15 +56,15 @@ export default class Board {
   }
 
   getLayout(currCoor) {
-    let halfFieldSizeX = 30;
-    let halfFieldSizeY = 20;
+    const halfFieldSizeX = 30;
+    const halfFieldSizeY = 20;
     var zoomedLayout = [];
     var topBound   = currCoor.r - halfFieldSizeY,
         botBound   = currCoor.r + halfFieldSizeY,
         leftBound  = currCoor.c - halfFieldSizeX,
         rightBound = currCoor.c + halfFieldSizeX;
 
-    console.log(topBound, botBound, leftBound, rightBound);
+    //console.log(topBound, botBound, leftBound, rightBound);
 
     if (topBound < 0) {
       topBound = 0;
@@ -255,16 +255,8 @@ export default class Board {
   }
 
   movePlayer(currCoor, targetCoor) {
-    //check targetCoor status
-    var targetCellType = this.getStat(targetCoor.r, targetCoor.c);
-
-    if (targetCellType === 0) {
-      this.setCell(currCoor.r, currCoor.c, 0);
-      this.setCell(targetCoor.r, targetCoor.c, 5);
-      return true;
-    } else {
-      return false;
-    }
+    this.setCell(currCoor.r, currCoor.c, 0);
+    this.setCell(targetCoor.r, targetCoor.c, 5);
   }
   
 }

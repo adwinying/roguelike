@@ -9,20 +9,21 @@ class Map extends Component {
     var compiledHtml = [];
     const {map, onPress} = this.props;
 
-    map.forEach(function(row, i){
+    for (var i=0; i<map.length; i++) {
+      var row = map[i];
       var compiledRow = [];
-      row.forEach(function(cell, j){
+      for (var j=0; j<row.length; j++) {
         compiledRow.push(
           <td className='map-cell' 
           	key={j}
           	data-row={i}
           	data-col={j}
-            data-val={cell}
+            data-val={row[j]}
           ></td>
         );
-      });
+      }
       compiledHtml.push(<tr key={i} className="map-row">{compiledRow}</tr>);
-    });
+    }
 
     return (
       <div className="container map-board">

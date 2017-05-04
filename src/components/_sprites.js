@@ -5,6 +5,33 @@ export default class Sprites {
 		this.weaponCoor = {};
 		this.healthCoor = [];
 		this.monsterCoor = [];
+		this.weaponList = [
+			{
+				name: 'Stick',
+				baseDmg: 3,
+			},
+			{
+				name: 'Dagger',
+				baseDmg: 5,
+			},
+			{
+				name: 'Spear',
+				baseDmg: 8,
+			},
+			{
+				name: 'Crossbow',
+				baseDmg: 10,
+			},
+			{
+				name: 'Katana',
+				baseDmg: 14,
+			},
+			{
+				name: 'Scythe',
+				baseDmg: 18,
+			}
+		];
+
 	}
 
 	init(game) {
@@ -46,5 +73,41 @@ export default class Sprites {
 				this.playerCoor = spriteCoor[i];
 			}
 		}
+	}
+
+	compileMonsterData(DungeonLvl) {
+		const monsterData = this.monsterCoor.map((coor) => {
+			return {
+				...coor,
+				hp: 25 * DungeonLvl
+			}
+		});
+
+		return monsterData;
+	}
+
+	getNextWeapon(DungeonLvl) {
+		return this.weaponList[DungeonLvl];
+	}
+
+	getMonsterDmg(DungeonLvl) {
+		const monsterBaseDmg = 5;
+		var randNum = Math.floor(Math.random() * 4) + monsterBaseDmg - 2;
+
+		return randNum * DungeonLvl;
+	}
+
+	getMonsterIndex(array, obj) {
+		for(var i=0; i<array.length; i++){
+			if(array[i].r === obj.r && array[i].c === obj.c) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	getCurrDmg(currWeapon, playerLvl) {
+		return currWeapon.baseDmg + (playerLvl * 5);
 	}
 }
