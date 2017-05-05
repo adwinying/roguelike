@@ -1,6 +1,7 @@
 {
   "name": "roguelike",
   "version": "0.1.0",
+  "homepage": "http://iadw.in/roguelike",
   "private": true,
   "dependencies": {
     "bootswatch": "^3.3.7",
