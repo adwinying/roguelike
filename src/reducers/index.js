@@ -207,9 +207,10 @@ const reducer = (state = initState, action) => {
 	//exit cell
 	} else if (cellState === 4) {
 		game.init();
-		sprites.init(game);
+		sprites.init(game, state.stats.dungeonLvl + 1);
 
 		return {
+			...state,
 			map: {
 				layout: game.getLayout(sprites.playerCoor, state.isDarknessOn)
 			},
@@ -220,6 +221,7 @@ const reducer = (state = initState, action) => {
 				...state.stats,
 				dungeonLvl: state.stats.dungeonLvl + 1
 			},
+			boss: sprites.compileBossData(),
 			monsterData: sprites.compileMonsterData(state.stats.dungeonLvl + 1)
 		}
 

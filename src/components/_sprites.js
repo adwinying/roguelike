@@ -9,11 +9,11 @@ export default class Sprites {
 		this.weaponList = [
 			{
 				name: 'Stick',
-				baseDmg: 3,
+				baseDmg: 2,
 			},
 			{
 				name: 'Dagger',
-				baseDmg: 6,
+				baseDmg: 5,
 			},
 			{
 				name: 'Spear',
@@ -55,19 +55,10 @@ export default class Sprites {
 		for(var i=0; i<spriteCoor.length; i++){
 			var row = spriteCoor[i].r;
 			var col = spriteCoor[i].c;
-			if(i < 9) {
+			if(i < 10) {
 				//Set monsters
 				game.setCell(row, col, 2);
 				this.monsterCoor.push(spriteCoor[i]);
-			} else if (i === 9) {
-				//Set boss at final dungeon lvl; else set monster
-				if(dungeonLvl === 5) {
-					game.setCell(row, col, 7);
-					this.bossCoor = spriteCoor[i];
-				} else {
-					game.setCell(row, col, 2);
-					this.monsterCoor.push(spriteCoor[i]);
-				}
 			} else if (i >= 10 && i < 17) {
 				//Set health boosters
 				game.setCell(row, col, 6);
@@ -77,9 +68,14 @@ export default class Sprites {
 				game.setCell(row, col, 3);
 				this.weaponCoor = spriteCoor[i];
 			} else if (i === 18) {
-				//Set exit
-				game.setCell(row, col, 4);
-				this.exitCoor = spriteCoor[i];
+				//Set boss at final dungeon lvl; else set exit
+				if(dungeonLvl === 5) {
+					game.setCell(row, col, 7);
+					this.bossCoor = spriteCoor[i];
+				} else {
+					game.setCell(row, col, 4);
+					this.exitCoor = spriteCoor[i];
+				}
 			} else if (i === 19) {
 				//Set player spawn location
 				game.setCell(row, col, 5);
@@ -92,7 +88,7 @@ export default class Sprites {
 		const monsterData = this.monsterCoor.map((coor) => {
 			return {
 				...coor,
-				hp: 15 + (10 * dungeonLvl)
+				hp: 5 + (20 * dungeonLvl)
 			}
 		});
 
@@ -102,7 +98,7 @@ export default class Sprites {
 	compileBossData(dungeonLvl) {
 		return {
 			...this.bossCoor,
-			hp: 300
+			hp: 500
 		}
 	}
 
@@ -128,6 +124,6 @@ export default class Sprites {
 	}
 
 	getCurrDmg(currWeapon, playerLvl) {
-		return currWeapon.baseDmg + (0.5 * playerLvl * (playerLvl+1) * 5);
+		return currWeapon.baseDmg + (playerLvl * 6);
 	}
 }
