@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { keyPress } from '../actions';
+import { keyPress, toggleDarkness } from '../actions';
 
 
 class Map extends Component {
@@ -46,22 +46,43 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onPress: (e) => {
-    	let key = e.key;
 
-    	if (key === 'w' || key === 'ArrowUp') {
-	      dispatch(keyPress('MOVE_UP', key));
-    	} else if (key === 's' || key === 'ArrowDown') {
-	      dispatch(keyPress('MOVE_DOWN', key));
-    	} else if (key === 'a' || key === 'ArrowLeft') {
-	      dispatch(keyPress('MOVE_LEFT', key));
-    	} else if (key === 'd' || key === 'ArrowRight') {
-	      dispatch(keyPress('MOVE_RIGHT', key));
-    	} else if (key === 'h') {
-        dispatch(keyPress('SHOW_ALERT', key));
-        setTimeout(() => {
-          dispatch(keyPress('HIDE_ALERT', 'h'));
-        }, 3000);
-      } 
+      switch (e.key) {
+        case 'w':
+        case 'ArrowUp':
+          dispatch(keyPress('MOVE_UP'));
+          break;
+
+        case 's':
+        case 'ArrowDown':
+          dispatch(keyPress('MOVE_DOWN'));
+          break;
+
+        case 'a':
+        case 'ArrowLeft':
+          dispatch(keyPress('MOVE_LEFT'));
+          break;
+
+        case 'd':
+        case 'ArrowRight':
+          dispatch(keyPress('MOVE_RIGHT'));
+          break;
+
+        case 'f':
+          dispatch(toggleDarkness());
+          break;
+
+        case 'h':
+          dispatch(keyPress('SHOW_ALERT'));
+          setTimeout(() => {
+            dispatch(keyPress('HIDE_ALERT', 'h'));
+          }, 3000);
+          break;
+
+        default:
+          break;
+
+      }
     }
   };
 }

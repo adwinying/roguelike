@@ -1,7 +1,6 @@
-export const keyPress = (type, keyPressed) => {
+export const keyPress = (type) => {
 	return {
-		type,
-		keyPressed
+		type
 	};
 }
 
@@ -10,4 +9,10 @@ export const hideAlert = () => {
 		type: "HIDE_ALERT",
 		isDed: false
 	};
+}
+
+export const toggleDarkness = () => {
+	return {
+		type: "TOGGLE_DARKNESS"
+	}
 }

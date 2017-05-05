@@ -9,7 +9,7 @@ sprites.init(game);
 
 const initState = {
 	map: {
-		layout: game.getLayout(sprites.playerCoor)
+		layout: game.getLayout(sprites.playerCoor, true)
 	},
 	coor: {
 		player: sprites.playerCoor
@@ -23,10 +23,10 @@ const initState = {
 		dungeonLvl: 1
 	},
 	monsterData: sprites.compileMonsterData(1),
+	boss: sprites.compileBossData(1),
 	showAlert: false,
 	isDed: false,
-	//debug
-	lastKeyPressed: null
+	isDarknessOn: true,
 }
 
 const reducer = (state = initState, action) => {
@@ -34,22 +34,32 @@ const reducer = (state = initState, action) => {
 	const currCellCoor = state.coor.player;
 	const {r, c} = state.coor.player;
 
-	//Manage popup alerts
-	if (action.type === 'SHOW_ALERT') {
-		return {
-			...state,
-			showAlert: true,
-			isDed: false
-		}
-	} else if (action.type === 'HIDE_ALERT') {
-		return {
-			...state,
-			showAlert: false
-		}
-	}
-
-	//Manage user controls
 	switch (action.type) {
+		//Manage popup alerts
+		case 'SHOW_ALERT':
+			return {
+				...state,
+				showAlert: true,
+				isDed: false
+			};
+
+		case 'HIDE_ALERT':
+			return {
+				...state,
+				showAlert: false
+			};
+
+		//Manage toggle darkness
+		case 'TOGGLE_DARKNESS':
+			return {
+				...state,
+				map: {
+					layout: game.getLayout(state.coor.player, !state.isDarknessOn)
+				},
+				isDarknessOn: !state.isDarknessOn
+			}
+
+		//Manage user controls
 		case 'MOVE_UP':
 			targetCellCoor = {...currCellCoor, r: r-1};
 			break;
@@ -78,7 +88,7 @@ const reducer = (state = initState, action) => {
 		return {
 			...state,
 			map: {
-				layout: game.getLayout(targetCellCoor)
+				layout: game.getLayout(targetCellCoor, state.isDarknessOn)
 			},
 			coor: {
 				player: targetCellCoor
@@ -118,7 +128,7 @@ const reducer = (state = initState, action) => {
 			return {
 				...state,
 				map: {
-					layout: game.getLayout(currCellCoor)
+					layout: game.getLayout(currCellCoor, state.isDarknessOn)
 				},
 				monsterData: newMonsterData,
 				stats: {
@@ -141,9 +151,16 @@ const reducer = (state = initState, action) => {
 
 				return {
 					...initState,
+					map: {
+						layout: game.getLayout(sprites.playerCoor, state.isDarknessOn)
+					},
+					coor: {
+						player: sprites.playerCoor
+					},
+					monsterData: sprites.compileMonsterData(1),
 					showAlert: true,
 					isDed: true,
-				}
+				};
 			}
 
 			//If not, update monster data's HP and return
@@ -158,7 +175,7 @@ const reducer = (state = initState, action) => {
 					...state.stats, 
 					hp: newHP
 				}
-			}
+			};
 		}
 
 	//weapon cell
@@ -167,7 +184,7 @@ const reducer = (state = initState, action) => {
 		return {
 			...state,
 			map: {
-				layout: game.getLayout(targetCellCoor)
+				layout: game.getLayout(targetCellCoor, state.isDarknessOn)
 			},
 			coor: {
 				player: targetCellCoor
@@ -186,7 +203,7 @@ const reducer = (state = initState, action) => {
 
 		return {
 			map: {
-				layout: game.getLayout(sprites.playerCoor)
+				layout: game.getLayout(sprites.playerCoor, state.isDarknessOn)
 			},
 			coor: {
 				player: sprites.playerCoor
@@ -204,7 +221,7 @@ const reducer = (state = initState, action) => {
 		return {
 			...state,
 			map: {
-				layout: game.getLayout(targetCellCoor)
+				layout: game.getLayout(targetCellCoor, state.isDarknessOn)
 			},
 			coor: {
 				player: targetCellCoor
@@ -214,6 +231,66 @@ const reducer = (state = initState, action) => {
 				hp: state.stats.hp + 20
 			}
 		};
+
+	//boss cell
+	} else if (cellState === 7) {
+		let bossHP   = state.boss.hp - state.stats.dmg;
+		var playerHP = state.stats.hp;
+
+		//If boss ded
+		if (bossHP <= 0) {
+			game.init();
+			sprites.init(game);
+
+			return {
+				...initState,
+				map: {
+					layout: game.getLayout(sprites.playerCoor, state.isDarknessOn)
+				},
+				coor: {
+					player: sprites.playerCoor
+				},
+				monsterData: sprites.compileMonsterData(1),
+				showAlert: true,
+				isDed: false,
+			};
+
+		//If boss not ded
+		} else {
+			playerHP = state.stats.hp - sprites.getMonsterDmg(8);
+
+			//If player ded
+			if (playerHP <= 0) {
+				game.init();
+				sprites.init(game);
+
+				return {
+					...initState,
+					map: {
+						layout: game.getLayout(sprites.playerCoor, state.isDarknessOn)
+					},
+					coor: {
+						player: sprites.playerCoor
+					},
+					showAlert: true,
+					isDed: true,
+					monsterData: sprites.compileMonsterData(1),
+				};
+			}
+
+			//If not, update boss' HP and return
+			return {
+				...state,
+				boss: {
+					...state.boss,
+					hp: bossHP
+				},
+				stats: {
+					...state.stats, 
+					hp: playerHP
+				}
+			}
+		}
 
 	} else {
 		return state;

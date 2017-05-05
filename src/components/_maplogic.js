@@ -25,7 +25,7 @@ function cloneBd (bd) {
 export default class Board {
   constructor(size) {
     this.layout = newBoard(size);
-    this.nextLayout = this.layout;
+    this.nextLayout = cloneBd(this.layout);
     this.gen = 0;
     this.size = size;
     this.playArea = [];
@@ -33,8 +33,10 @@ export default class Board {
   
   init() {
     this.layout = newBoard(this.size);
+    this.nextLayout = cloneBd(this.layout);
     this.gen = 0;
     this.randomize();
+    this.playArea = [];
     for (var i = 0; i < 7; i++) { this.update(); }
     for (var j = 0; j < this.size; j++) {
       this.layout[0][j] = 1;
@@ -55,14 +57,47 @@ export default class Board {
     }
   }
 
-  getLayout(currCoor) {
+  getLayout(currCoor, isDarknessOn) {
     const halfFieldSizeX = 30;
     const halfFieldSizeY = 20;
+    const {r, c} = currCoor;
+    var zoomedRow = [];
     var zoomedLayout = [];
-    var topBound   = currCoor.r - halfFieldSizeY,
-        botBound   = currCoor.r + halfFieldSizeY,
-        leftBound  = currCoor.c - halfFieldSizeX,
-        rightBound = currCoor.c + halfFieldSizeX;
+    var topBound   = r - halfFieldSizeY,
+        botBound   = r + halfFieldSizeY,
+        leftBound  = c - halfFieldSizeX,
+        rightBound = c + halfFieldSizeX;
+    var visibleCell = [];
+
+    function isCorner (i,j) {
+      if ((i === r-6 || i === r+6) && (j<c-3 || j>c+3)) {
+        return true;
+      } else if ((i === r-5 || i === r+5) && (j<c-4 || j>c+4)) {
+        return true;
+      } else if ((i === r-4 || i === r+4) && (j<c-5 || j>c+5)) {
+        return true;
+      } else {
+        return false;
+      } 
+    }
+
+    function visibleCellIndex (i, j) {
+      for (var k=0; k<visibleCell.length; k++) {
+        if (visibleCell[k].r === i && visibleCell[k].c === j) {
+          return k;
+        }
+      }
+
+      return -1;
+    }
+
+    for (var i=r-6; i<=r+6; i++) {
+      for (var j=c-6; j<=c+6; j++) {
+        if(!isCorner(i,j)) {
+          visibleCell.push({r:i, c:j});
+        }
+      }
+    }
 
     //console.log(topBound, botBound, leftBound, rightBound);
 
@@ -82,12 +117,27 @@ export default class Board {
       rightBound = this.size;
     } 
 
-    for (var i = topBound; i < botBound; i++) {
-      var zoomedRow = [];
-      for (var j = leftBound; j < rightBound; j++) {
-        zoomedRow.push(this.getStat(i,j));
+    if (isDarknessOn) {
+      for (i = topBound; i < botBound; i++) {
+        zoomedRow = [];
+        for (j = leftBound; j < rightBound; j++) {
+          if (visibleCellIndex(i,j) !== -1) {
+            zoomedRow.push(this.getStat(i,j));
+          } else {
+            zoomedRow.push(8);
+          }
+        }
+        zoomedLayout.push(zoomedRow);
       }
-      zoomedLayout.push(zoomedRow);
+
+    } else {
+      for (i = topBound; i < botBound; i++) {
+        zoomedRow = [];
+        for (j = leftBound; j < rightBound; j++) {
+          zoomedRow.push(this.getStat(i,j));
+        }
+        zoomedLayout.push(zoomedRow);
+      }
     }
 
     return zoomedLayout;

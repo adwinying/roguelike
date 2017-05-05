@@ -3,6 +3,7 @@ export default class Sprites {
 		this.exitCoor = {};
 		this.playerCoor = {};
 		this.weaponCoor = {};
+		this.bossCoor = {};
 		this.healthCoor = [];
 		this.monsterCoor = [];
 		this.weaponList = [
@@ -34,7 +35,7 @@ export default class Sprites {
 
 	}
 
-	init(game) {
+	init(game, dungeonLvl) {
 		var spriteCoor = [];
 		var indexArr = [];
 		this.monsterCoor = [];
@@ -54,10 +55,19 @@ export default class Sprites {
 		for(var i=0; i<spriteCoor.length; i++){
 			var row = spriteCoor[i].r;
 			var col = spriteCoor[i].c;
-			if(i < 10) {
+			if(i < 9) {
 				//Set monsters
 				game.setCell(row, col, 2);
 				this.monsterCoor.push(spriteCoor[i]);
+			} else if (i === 9) {
+				//Set boss at final dungeon lvl; else set monster
+				if(dungeonLvl === 5) {
+					game.setCell(row, col, 7);
+					this.bossCoor = spriteCoor[i];
+				} else {
+					game.setCell(row, col, 2);
+					this.monsterCoor.push(spriteCoor[i]);
+				}
 			} else if (i >= 10 && i < 17) {
 				//Set health boosters
 				game.setCell(row, col, 6);
@@ -78,26 +88,33 @@ export default class Sprites {
 		}
 	}
 
-	compileMonsterData(DungeonLvl) {
+	compileMonsterData(dungeonLvl) {
 		const monsterData = this.monsterCoor.map((coor) => {
 			return {
 				...coor,
-				hp: 15 + (10 * DungeonLvl)
+				hp: 15 + (10 * dungeonLvl)
 			}
 		});
 
 		return monsterData;
 	}
 
-	getNextWeapon(DungeonLvl) {
-		return this.weaponList[DungeonLvl];
+	compileBossData(dungeonLvl) {
+		return {
+			...this.bossCoor,
+			hp: 300
+		}
 	}
 
-	getMonsterDmg(DungeonLvl) {
+	getNextWeapon(dungeonLvl) {
+		return this.weaponList[dungeonLvl];
+	}
+
+	getMonsterDmg(dungeonLvl) {
 		const monsterBaseDmg = 3;
 		var randNum = Math.floor(Math.random() * 4);
 
-		return (monsterBaseDmg * DungeonLvl) + randNum;
+		return (monsterBaseDmg * dungeonLvl) + randNum;
 	}
 
 	getMonsterIndex(array, obj) {

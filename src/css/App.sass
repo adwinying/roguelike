@@ -32,7 +32,10 @@ $cellsize: 1 / 60 * 100%
   background-color: #111
   
   &[data-val="0"]
-    opacity: 0
+    background-color: transparent
+
+  &[data-val="1"]
+    background-color: grey
   
   &[data-val="2"]
     background-color: red
@@ -48,6 +51,12 @@ $cellsize: 1 / 60 * 100%
 
   &[data-val="6"]
     background-color: green
+
+  &[data-val="7"]
+    background-color: magenta
+
+  &[data-val="8"]
+    background-color: black
 
 .rogue-key
   display: inline-block
