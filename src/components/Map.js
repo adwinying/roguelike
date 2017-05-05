@@ -39,7 +39,7 @@ class Map extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    map: state.map.layout
+    map: state.layout
   };
 }
 

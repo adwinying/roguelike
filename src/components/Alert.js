@@ -32,8 +32,8 @@ class Alert extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		showAlert: state.controls.showAlert,
-		isDed: state.controls.isDed
+		showAlert: state.showAlert,
+		isDed: state.isDed
 	}
 };
 

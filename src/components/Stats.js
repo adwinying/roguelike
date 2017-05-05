@@ -39,12 +39,12 @@ class Stats extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    hp: state.map.stats.hp,
-    xp: state.map.stats.xpToNxtLvl,
-    weapon: state.map.stats.weapon.name,
-    dmg: state.map.stats.dmg,
-    playerLvl: state.map.stats.playerLvl,
-    dungeonLvl: state.map.stats.dungeonLvl
+    hp: state.stats.hp,
+    xp: state.stats.xpToNxtLvl,
+    weapon: state.stats.weapon.name,
+    dmg: state.stats.dmg,
+    playerLvl: state.stats.playerLvl,
+    dungeonLvl: state.stats.dungeonLvl
   };
 }
 
