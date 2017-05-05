@@ -8,7 +8,9 @@ game.init();
 sprites.init(game);
 
 const initState = {
-	layout: game.getLayout(sprites.playerCoor),
+	map: {
+		layout: game.getLayout(sprites.playerCoor)
+	},
 	coor: {
 		player: sprites.playerCoor
 	},
@@ -75,9 +77,10 @@ const reducer = (state = initState, action) => {
 		game.movePlayer(currCellCoor, targetCellCoor)
 		return {
 			...state,
-			layout: game.getLayout(targetCellCoor),
+			map: {
+				layout: game.getLayout(targetCellCoor)
+			},
 			coor: {
-				...state.coor, 
 				player: targetCellCoor
 			}
 		};
@@ -100,6 +103,7 @@ const reducer = (state = initState, action) => {
 			return state;
 		}
 
+		//If monster ded
 		if (monsterHP <= 0) {
 			var newXP  = state.stats.xpToNxtLvl - (monsterBaseXp * state.stats.dungeonLvl);
 			var newLvl = state.stats.playerLvl;
@@ -113,7 +117,9 @@ const reducer = (state = initState, action) => {
 			game.setCell(targetCellCoor.r, targetCellCoor.c, 0);
 			return {
 				...state,
-				layout: game.getLayout(currCellCoor),
+				map: {
+					layout: game.getLayout(currCellCoor)
+				},
 				monsterData: newMonsterData,
 				stats: {
 					...state.stats,
@@ -124,9 +130,23 @@ const reducer = (state = initState, action) => {
 				}
 			};
 
+		//If monster not ded
 		} else {
 			newHP = state.stats.hp - sprites.getMonsterDmg(state.stats.dungeonLvl);
 
+			//If player ded
+			if (newHP <= 0) {
+				game.init();
+				sprites.init(game);
+
+				return {
+					...initState,
+					showAlert: true,
+					isDed: true,
+				}
+			}
+
+			//If not, update monster data's HP and return
 			newMonsterData.push({
 				...targetCellCoor, 
 				hp: monsterHP});
@@ -146,9 +166,10 @@ const reducer = (state = initState, action) => {
 		game.movePlayer(currCellCoor, targetCellCoor)
 		return {
 			...state,
-			layout: game.getLayout(targetCellCoor),
+			map: {
+				layout: game.getLayout(targetCellCoor)
+			},
 			coor: {
-				...state.coor, 
 				player: targetCellCoor
 			},
 			stats: {
@@ -164,7 +185,9 @@ const reducer = (state = initState, action) => {
 		sprites.init(game);
 
 		return {
-			layout: game.getLayout(sprites.playerCoor),
+			map: {
+				layout: game.getLayout(sprites.playerCoor)
+			},
 			coor: {
 				player: sprites.playerCoor
 			},
@@ -180,9 +203,10 @@ const reducer = (state = initState, action) => {
 		game.movePlayer(currCellCoor, targetCellCoor)
 		return {
 			...state,
-			layout: game.getLayout(targetCellCoor),
+			map: {
+				layout: game.getLayout(targetCellCoor)
+			},
 			coor: {
-				...state.coor, 
 				player: targetCellCoor
 			},
 			stats: {

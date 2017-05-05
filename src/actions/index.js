@@ -4,3 +4,10 @@ export const keyPress = (type, keyPressed) => {
 		keyPressed
 	};
 }
+
+export const hideAlert = () => {
+	return {
+		type: "HIDE_ALERT",
+		isDed: false
+	};
+}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { hideAlert } from '../actions';
 
 class Alert extends Component {
 	render () {
@@ -18,6 +19,9 @@ class Alert extends Component {
 				boldText   = "Congratulations.";
 				message    = " You won!";
 			}
+			setTimeout(() => {
+				this.props.hideAlert();
+			}, 3000);
 		} 
 
 		return (
@@ -38,11 +42,16 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-
+	return {
+		hideAlert: () => {
+			dispatch(hideAlert());
+		}
+	}
 };
 
 const AlertContainer = connect(
-	mapStateToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(Alert);
 
 export default AlertContainer;
