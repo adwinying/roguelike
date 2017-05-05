@@ -12,23 +12,23 @@ export default class Sprites {
 			},
 			{
 				name: 'Dagger',
-				baseDmg: 5,
+				baseDmg: 6,
 			},
 			{
 				name: 'Spear',
-				baseDmg: 8,
+				baseDmg: 11,
 			},
 			{
 				name: 'Crossbow',
-				baseDmg: 10,
+				baseDmg: 16,
 			},
 			{
 				name: 'Katana',
-				baseDmg: 14,
+				baseDmg: 22,
 			},
 			{
 				name: 'Scythe',
-				baseDmg: 18,
+				baseDmg: 28,
 			}
 		];
 
@@ -37,6 +37,9 @@ export default class Sprites {
 	init(game) {
 		var spriteCoor = [];
 		var indexArr = [];
+		this.monsterCoor = [];
+		this.healthCoor  = [];
+
 		while(indexArr.length < 20) {
 			var randNum = Math.floor(Math.random() * game.playArea.length);
 			if( indexArr.indexOf(randNum) === -1 ) {
@@ -79,7 +82,7 @@ export default class Sprites {
 		const monsterData = this.monsterCoor.map((coor) => {
 			return {
 				...coor,
-				hp: 25 * DungeonLvl
+				hp: 15 + (10 * DungeonLvl)
 			}
 		});
 
@@ -91,10 +94,10 @@ export default class Sprites {
 	}
 
 	getMonsterDmg(DungeonLvl) {
-		const monsterBaseDmg = 5;
-		var randNum = Math.floor(Math.random() * 4) + monsterBaseDmg - 2;
+		const monsterBaseDmg = 3;
+		var randNum = Math.floor(Math.random() * 4);
 
-		return randNum * DungeonLvl;
+		return (monsterBaseDmg * DungeonLvl) + randNum;
 	}
 
 	getMonsterIndex(array, obj) {
@@ -108,6 +111,6 @@ export default class Sprites {
 	}
 
 	getCurrDmg(currWeapon, playerLvl) {
-		return currWeapon.baseDmg + (playerLvl * 5);
+		return currWeapon.baseDmg + (0.5 * playerLvl * (playerLvl+1) * 5);
 	}
 }

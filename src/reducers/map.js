@@ -10,8 +10,6 @@ sprites.init(game);
 const initState = {
 	layout: game.getLayout(sprites.playerCoor),
 	coor: {
-		exit: sprites.exitCoor,
-		monster: sprites.monsterCoor,
 		player: sprites.playerCoor
 	},
 	stats: {
@@ -68,12 +66,13 @@ const map = (state = initState, action) => {
 	//monster cell
 	} else if (cellState === 2) {
 		const monsterBaseXp = 10;
-		const playerBaseXp  = 100;
+		const playerBaseXp  = 80;
 		let monsterIndex = sprites.getMonsterIndex(state.monsterData, targetCellCoor);
 		let monsterHP = state.monsterData[monsterIndex].hp - state.stats.dmg;
 		var newMonsterData = state.monsterData.filter((monster, index) => {
 			return index !== monsterIndex;
 		});
+		var newHP	 = state.stats.hp;
 
 		//console.log(monsterIndex, monsterHP, newMonsterData);
 
@@ -88,7 +87,8 @@ const map = (state = initState, action) => {
 
 			if (newXP <= 0) {
 				newLvl = state.stats.playerLvl + 1;
-				newXP = playerBaseXp + (40 * (newLvl - 1));
+				newHP  += (20 * newLvl);
+				newXP  = newXP + playerBaseXp + (20 * newLvl);
 			}	
 
 			game.setCell(targetCellCoor.r, targetCellCoor.c, 0);
@@ -98,6 +98,7 @@ const map = (state = initState, action) => {
 				monsterData: newMonsterData,
 				stats: {
 					...state.stats,
+					hp: newHP,
 					xpToNxtLvl: newXP,
 					playerLvl: newLvl,
 					dmg: sprites.getCurrDmg(state.stats.weapon, newLvl)
@@ -105,7 +106,7 @@ const map = (state = initState, action) => {
 			};
 
 		} else {
-			var newHP = state.stats.hp - sprites.getMonsterDmg(state.stats.dungeonLvl);
+			newHP = state.stats.hp - sprites.getMonsterDmg(state.stats.dungeonLvl);
 
 			newMonsterData.push({
 				...targetCellCoor, 
@@ -137,6 +138,23 @@ const map = (state = initState, action) => {
 				dmg: sprites.getCurrDmg(sprites.getNextWeapon(state.stats.dungeonLvl), state.stats.playerLvl)
 			}
 		};
+
+	//exit cell
+	} else if (cellState === 4) {
+		game.init();
+		sprites.init(game);
+
+		return {
+			layout: game.getLayout(sprites.playerCoor),
+			coor: {
+				player: sprites.playerCoor
+			},
+			stats: {
+				...state.stats,
+				dungeonLvl: state.stats.dungeonLvl + 1
+			},
+			monsterData: sprites.compileMonsterData(state.stats.dungeonLvl + 1)
+		}
 
 	//health cell
 	} else if (cellState === 6) {

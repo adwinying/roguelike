@@ -56,7 +56,12 @@ const mapDispatchToProps = (dispatch) => {
 	      dispatch(keyPress('MOVE_LEFT', key));
     	} else if (key === 'd' || key === 'ArrowRight') {
 	      dispatch(keyPress('MOVE_RIGHT', key));
-    	} 
+    	} else if (key === 'h') {
+        dispatch(keyPress('SHOW_ALERT', key));
+        setTimeout(() => {
+          dispatch(keyPress('HIDE_ALERT', 'h'));
+        }, 3000);
+      } 
     }
   };
 }
