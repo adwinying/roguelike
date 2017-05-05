@@ -168,6 +168,7 @@ const reducer = (state = initState, action) => {
 					monsterData: sprites.compileMonsterData(1),
 					showAlert: true,
 					isPlayerDed: true,
+					isDarknessOn: state.isDarknessOn
 				};
 			}
 
@@ -263,6 +264,7 @@ const reducer = (state = initState, action) => {
 				monsterData: sprites.compileMonsterData(1),
 				showAlert: true,
 				isPlayerDed: false,
+				isDarknessOn: state.isDarknessOn
 			};
 
 		//If boss not ded
@@ -283,8 +285,9 @@ const reducer = (state = initState, action) => {
 						player: sprites.playerCoor
 					},
 					showAlert: true,
-					isPlayerDed: true,
 					monsterData: sprites.compileMonsterData(1),
+					isPlayerDed: true,
+					isDarknessOn: state.isDarknessOn
 				};
 			}
 
