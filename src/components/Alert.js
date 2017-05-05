@@ -10,7 +10,7 @@ class Alert extends Component {
 
 		if (this.props.showAlert) {
 			className += " active";
-			if (this.props.isDed) {
+			if (this.props.isPlayerDed) {
 				className += " alert-danger";
 				boldText   = "You Died.";
 				message    = " Better luck next time!";
@@ -37,7 +37,7 @@ class Alert extends Component {
 const mapStateToProps = (state) => {
 	return {
 		showAlert: state.showAlert,
-		isDed: state.isDed
+		isPlayerDed: state.isPlayerDed
 	}
 };
 

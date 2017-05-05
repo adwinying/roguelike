@@ -25,8 +25,9 @@ const initState = {
 	monsterData: sprites.compileMonsterData(1),
 	boss: sprites.compileBossData(1),
 	showAlert: false,
-	isDed: false,
+	isPlayerDed: false,
 	isDarknessOn: true,
+	isGuideEnabled: false
 }
 
 const reducer = (state = initState, action) => {
@@ -40,7 +41,7 @@ const reducer = (state = initState, action) => {
 			return {
 				...state,
 				showAlert: true,
-				isDed: false
+				isPlayerDed: false
 			};
 
 		case 'HIDE_ALERT':
@@ -57,6 +58,13 @@ const reducer = (state = initState, action) => {
 					layout: game.getLayout(state.coor.player, !state.isDarknessOn)
 				},
 				isDarknessOn: !state.isDarknessOn
+			}
+
+		//Manage toggle guide
+		case 'TOGGLE_GUIDE':
+			return {
+				...state,
+				isGuideEnabled: !state.isGuideEnabled
 			}
 
 		//Manage user controls
@@ -159,7 +167,7 @@ const reducer = (state = initState, action) => {
 					},
 					monsterData: sprites.compileMonsterData(1),
 					showAlert: true,
-					isDed: true,
+					isPlayerDed: true,
 				};
 			}
 
@@ -252,7 +260,7 @@ const reducer = (state = initState, action) => {
 				},
 				monsterData: sprites.compileMonsterData(1),
 				showAlert: true,
-				isDed: false,
+				isPlayerDed: false,
 			};
 
 		//If boss not ded
@@ -273,7 +281,7 @@ const reducer = (state = initState, action) => {
 						player: sprites.playerCoor
 					},
 					showAlert: true,
-					isDed: true,
+					isPlayerDed: true,
 					monsterData: sprites.compileMonsterData(1),
 				};
 			}

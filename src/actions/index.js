@@ -16,3 +16,9 @@ export const toggleDarkness = () => {
 		type: "TOGGLE_DARKNESS"
 	}
 }
+
+export const toggleGuide = () => {
+	return {
+		type: "TOGGLE_GUIDE"
+	}
+}

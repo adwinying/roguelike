@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Alert from './Alert';
+import Guide from './Guide';
 import Header from './Header';
 import Stats from './Stats';
 import Map from './Map';
@@ -10,6 +11,7 @@ class App extends Component {
     return (
       <div>
         <Alert />
+        <Guide />
         <Header />
         <Stats />
         <Map />

@@ -10,6 +10,29 @@ $cellsize: 1 / 60 * 100%
 .rogue-alert.active
   top: 0
 
+.rogue-guide
+  display: block
+  opacity: 0
+  visibility: hidden
+  transition: all 0.3s;
+
+  .modal-body
+    max-height: 90vh
+    overflow: scroll
+
+.rogue-guide.active
+  opacity: 1
+  visibility: visible
+
+.guide-cell.map-cell
+  display: inline-block
+  height: 13px
+  width: 13px
+  padding: 0 5px
+  margin-right: 10px
+
+  &:after
+
 .stat-val
   display: block
   font-size: 2em
@@ -61,6 +84,8 @@ $cellsize: 1 / 60 * 100%
 .rogue-key
   display: inline-block
   margin: 0 0.3em
-  min-width: 1.1em
+  padding: 0 0.3em
+  min-width: 24px
   border: 1px solid #000
   border-radius: 3px
+  text-align: center

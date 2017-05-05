@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { keyPress, toggleDarkness } from '../actions';
+import { keyPress, toggleDarkness, toggleGuide } from '../actions';
 
 
 class Map extends Component {
@@ -73,10 +73,7 @@ const mapDispatchToProps = (dispatch) => {
           break;
 
         case 'h':
-          dispatch(keyPress('SHOW_ALERT'));
-          setTimeout(() => {
-            dispatch(keyPress('HIDE_ALERT', 'h'));
-          }, 3000);
+          dispatch(toggleGuide());
           break;
 
         default:
