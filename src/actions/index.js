@@ -1,24 +1,16 @@
-export const keyPress = (type) => {
-	return {
-		type
-	};
-}
+export const keyPress = type => ({
+  type,
+});
 
-export const hideAlert = () => {
-	return {
-		type: "HIDE_ALERT",
-		isDed: false
-	};
-}
+export const hideAlert = () => ({
+  type : 'HIDE_ALERT',
+  isDed: false,
+});
 
-export const toggleDarkness = () => {
-	return {
-		type: "TOGGLE_DARKNESS"
-	}
-}
+export const toggleDarkness = () => ({
+  type: 'TOGGLE_DARKNESS',
+});
 
-export const toggleGuide = () => {
-	return {
-		type: "TOGGLE_GUIDE"
-	}
-}
+export const toggleGuide = () => ({
+  type: 'TOGGLE_GUIDE',
+});

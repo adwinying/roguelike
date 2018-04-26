@@ -1,0 +1,14 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-underscore-dangle": ["error", { "allow": ["__REDUX_DEVTOOLS_EXTENSION__"] }],
+    "key-spacing": ["error", { "align": "colon" }],
+    "react/prop-types": 0,
+    "no-multi-spaces": ["error", { "exceptions": { "VariableDeclarator": true } }]
+  }
+}
