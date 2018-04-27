@@ -53,8 +53,8 @@ export default class Sprites {
     });
 
     for (let i = 0; i < spriteCoor.length; i += 1) {
-      const row = spriteCoor[i].r;
-      const col = spriteCoor[i].c;
+      const { row, col } = spriteCoor[i];
+
       if (i < 10) {
         // Set monsters
         game.setCell(row, col, 2);

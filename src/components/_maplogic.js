@@ -1,60 +1,212 @@
-function newBoard(size) {
-  const subArr = [];
-  const arr = [];
+import {
+  boardConst as params,
+  spriteConst as sprites,
+} from '../constants';
 
-  for (let i = 0; i < size; i += 1) {
-    subArr[i] = 0;
-  }
-  for (let j = 0; j < size; j += 1) {
-    arr[j] = subArr.slice(0);
-  }
-
-  return arr;
-}
-
-function cloneBd(bd) {
-  return bd.map(col => col.slice(0));
-}
+const cellType = sprites.cell;
 
 export default class Board {
-  constructor(size) {
-    this.layout = newBoard(size);
-    this.nextLayout = cloneBd(this.layout);
+  constructor() {
+    this.layout = [];
+    this.nextLayout = [];
     this.gen = 0;
-    this.size = size;
+    this.size = params.boardSize;
     this.playArea = [];
+  }
+
+  newBoard() {
+    this.layout = [];
+
+    while (this.layout.length < this.size) {
+      this.layout.push(this.newRandomCol());
+    }
   }
 
   init() {
-    this.layout = newBoard(this.size);
-    this.nextLayout = cloneBd(this.layout);
-    this.gen = 0;
-    this.randomize();
-    this.playArea = [];
-    for (let i = 0; i < 7; i += 1) { this.update(); }
-    for (let j = 0; j < this.size; j += 1) {
-      this.layout[0][j] = 1;
-      this.layout[j][0] = 1;
-      this.layout[this.size - 1][j] = 1;
-      this.layout[j][this.size - 1] = 1;
-    }
+    this.newBoard();
+    this.randomizeBoard();
+    this.setWall();
 
     // Quality check
-    const startNode = this.getFirstAvailCell();
-    this.checkPlayArea(startNode.r, startNode.c);
-    // console.log(this.playArea.length);
-    // console.log(this.playArea.length/this.size/this.size);
-    if (this.playArea.length / this.size / this.size < 0.25) {
+    const startCell = this.getFirstAvailCell();
+    this.checkPlayableArea(startCell.r, startCell.c);
+
+    const playableAreaRatio =
+      this.playArea.length / (this.size * this.size);
+
+    if (playableAreaRatio < params.playableAreaRatio) {
       this.init();
     } else {
-      this.fillVoidCells();
+      this.fillInvalidCells();
     }
   }
 
+
+  /**
+   * private methods
+   */
+
+  newRandomCol() {
+    const colArr = [];
+
+    while (colArr.length < this.size) {
+      colArr.push(Math.random() < params.randomizerThreshold ?
+        cellType.wall : cellType.free);
+    }
+
+    return colArr;
+  }
+
+
+  randomizeBoard() {
+    for (let c = 0; c < params.randomizeCount; c += 1) {
+      this.nextLayout = Board.cloneBoard(this.layout);
+
+      for (let i = 0; i < this.size; i += 1) {
+        for (let j = 0; j < this.size; j += 1) {
+          this.updateCell(i, j);
+        }
+      }
+
+      this.layout = Board.cloneBoard(this.nextLayout);
+      this.gen += 1;
+    }
+  }
+
+
+  setWall() {
+    const maxIndex = this.size - 1;
+
+    // Vertical wall
+    this.layout[0].fill(1);
+    this.layout[maxIndex].fill(1);
+
+    // Horizontal wall
+    for (let j = 0; j < this.size; j += 1) {
+      this.setCell(j, 0, 1);
+      this.setCell(j, maxIndex, 1);
+    }
+  }
+
+
+  getNeighCellCount(currRow, currCol) {
+    const maxIndex = this.size - 1;
+    const prevRow = currRow === 0 ? maxIndex : currRow - 1;
+    const prevCol = currCol === 0 ? maxIndex : currCol - 1;
+    const nextRow = currRow === maxIndex ? 0 : currRow + 1;
+    const nextCol = currCol === maxIndex ? 0 : currCol + 1;
+
+    const neighCell = [
+      this.getCell(prevRow, prevCol),
+      this.getCell(prevRow, currCol),
+      this.getCell(prevRow, nextCol),
+      this.getCell(currRow, prevCol),
+      this.getCell(currRow, nextCol),
+      this.getCell(nextRow, prevCol),
+      this.getCell(nextRow, currCol),
+      this.getCell(nextRow, nextCol),
+    ];
+
+    return neighCell.filter(cell =>
+      cell === cellType.wall).length;
+  }
+
+
+  getFirstAvailCell() {
+    for (let i = Math.ceil(this.size / 10); i < this.size; i += 1) {
+      for (let j = Math.ceil(this.size / 10); j < this.size; j += 1) {
+        if (this.getCell(i, j) === cellType.free) {
+          return { r: i, c: j };
+        }
+      }
+    }
+
+    throw new Error('No available cells');
+  }
+
+
+  checkPlayableArea(currRow, currCol) {
+    // If target-color is equal to replacement-color, return.
+    // If the color of node is not equal to target-color, return.
+    if (this.getCell(currRow, currCol) !== cellType.free) {
+      return;
+    }
+
+    const minIndex = 0;
+    const maxIndex = this.size - 1;
+    const prevRow  = currRow - 1;
+    const nextRow  = currRow + 1;
+    const prevCol  = currCol - 1;
+    const nextCol  = currCol + 1;
+
+    // Set the color of node to replacement-color.
+    this.layout[currRow][currCol] = 2;
+    this.playArea.push({
+      row: currRow,
+      col: currCol,
+    });
+
+    // Perform Flood-fill (south)
+    if (currRow !== maxIndex) {
+      this.checkPlayableArea(nextRow, currCol);
+    }
+    // Perform Flood-fill (north)
+    if (currRow !== minIndex) {
+      this.checkPlayableArea(prevRow, currCol);
+    }
+    // Perform Flood-fill (west)
+    if (currCol !== minIndex) {
+      this.checkPlayableArea(currRow, prevCol);
+    }
+    // Perform Flood-fill (east)
+    if (currCol !== maxIndex) {
+      this.checkPlayableArea(currRow, nextCol);
+    }
+  }
+
+
+  fillInvalidCells() {
+    const colArr = new Array(this.size).fill(cellType.wall);
+    this.layout = colArr.map(() => [...colArr]);
+
+    this.playArea.forEach((cell) => {
+      this.setCell(cell.row, cell.col, cellType.free);
+    });
+  }
+
+  movePlayer(currCoor, targetCoor) {
+    this.setCell(currCoor.row, currCoor.col, cellType.free);
+    this.setCell(targetCoor.row, targetCoor.col, cellType.player);
+  }
+
+
+  /**
+   * Helper methods
+   */
+
+  getCell(r, c) {
+    return this.layout[r][c];
+  }
+
+  setCell(r, c, val) {
+    this.layout[r][c] = val;
+  }
+
+  static cloneBoard(board) {
+    return board.map(col => col.slice(0));
+  }
+
+  /**
+   *
+   *
+   *
+   */
+
   getLayout(currCoor, isDarknessOn) {
-    const halfFieldSizeX = 30;
-    const halfFieldSizeY = 20;
-    const { r, c } = currCoor;
+    const { fieldSizeX, fieldSizeY } = params;
+    const halfFieldSizeX = fieldSizeX / 2;
+    const halfFieldSizeY = fieldSizeY / 2;
+    const { row: r, col: c } = currCoor;
     const zoomedLayout = [];
     const visibleCell = [];
     let zoomedRow = [];
@@ -116,7 +268,7 @@ export default class Board {
         zoomedRow = [];
         for (let j = leftBound; j < rightBound; j += 1) {
           if (visibleCellIndex(i, j) !== -1) {
-            zoomedRow.push(this.getStat(i, j));
+            zoomedRow.push(this.getCell(i, j));
           } else {
             zoomedRow.push(8);
           }
@@ -127,35 +279,13 @@ export default class Board {
       for (let i = topBound; i < botBound; i += 1) {
         zoomedRow = [];
         for (let j = leftBound; j < rightBound; j += 1) {
-          zoomedRow.push(this.getStat(i, j));
+          zoomedRow.push(this.getCell(i, j));
         }
         zoomedLayout.push(zoomedRow);
       }
     }
 
     return zoomedLayout;
-  }
-
-  getStat(r, c) {
-    return this.layout[r][c];
-  }
-
-  setCell(r, c, val) {
-    this.layout[r][c] = val;
-  }
-
-  activeCellCount() {
-    let activeCells = 0;
-
-    this.layout.forEach((row) => {
-      row.forEach((cell) => {
-        if (cell > 0) {
-          activeCells += 1;
-        }
-      });
-    });
-
-    return activeCells;
   }
 
   randomize() {
@@ -168,114 +298,8 @@ export default class Board {
     }
   }
 
-  checkPlayArea(r, c) {
-    // If target-color is equal to replacement-color, return.
-    // If the color of node is not equal to target-color, return.
-    if (this.layout[r][c] !== 0) {
-      return;
-    }
-
-    // Set the color of node to replacement-color.
-    this.layout[r][c] = 2;
-    this.playArea.push({ r, c });
-
-    // Perform Flood-fill (south)
-    if (r !== this.size - 1) {
-      this.checkPlayArea(r+1, c);
-    }
-    // Perform Flood-fill (north)
-    if (r !== 0) {
-      this.checkPlayArea(r-1, c);
-    }
-    // Perform Flood-fill (west)
-    if (c !== 0) {
-      this.checkPlayArea(r, c-1);
-    }
-    // Perform Flood-fill (east)
-    if (c !== this.size-1) {
-      this.checkPlayArea(r, c+1);
-    }
-  }
-
-  getFirstAvailCell() {
-    for (let i = Math.ceil(this.size / 10); i < this.size; i += 1) {
-      for (let j = Math.ceil(this.size / 10); j < this.size; j += 1) {
-        if (this.layout[i][j] === 0) {
-          return { r: i, c: j };
-        }
-      }
-    }
-  }
-
-  fillVoidCells() {
-    for (let i = 1; i < this.size - 1; i += 1) {
-      for (let j = 1; j < this.size - 1; j += 1) {
-        this.layout[i][j] = 1;
-      }
-    }
-
-    this.playArea.forEach((cell) => {
-      this.layout[cell.r][cell.c] = 0;
-    });
-  }
-
-  chkNeigh(currRow, currCol) {
-    const neighCells = [];
-    let prevRow;
-    let prevCol;
-    let nextRow;
-    let nextCol;
-    let activeCells = 0;
-
-    // loopback board
-    if (currRow === 0) {
-      prevRow = this.size - 1;
-    } else {
-      prevRow = currRow - 1;
-    }
-
-    if (currRow === (this.size - 1)) {
-      nextRow = 0;
-    } else {
-      nextRow = currRow + 1;
-    }
-
-    if (currCol === 0) {
-      prevCol = this.size - 1;
-    } else {
-      prevCol = currCol - 1;
-    }
-
-    if (currCol === (this.size - 1)) {
-      nextCol = 0;
-    } else {
-      nextCol = currCol + 1;
-    }
-
-    // console.log(prevRow, nextRow, prevCol, nextCol);
-
-    // scanning surrounding cells
-    neighCells.push(this.getStat(prevRow, prevCol)); // topleft
-    neighCells.push(this.getStat(prevRow, currCol)); // top
-    neighCells.push(this.getStat(prevRow, nextCol)); // topright
-    neighCells.push(this.getStat(currRow, prevCol)); // left
-    neighCells.push(this.getStat(currRow, nextCol)); // right
-    neighCells.push(this.getStat(nextRow, prevCol)); // botleft
-    neighCells.push(this.getStat(nextRow, currCol)); // bot
-    neighCells.push(this.getStat(nextRow, nextCol)); // botright
-    // console.log(neighCells);
-
-    neighCells.forEach((cell) => {
-      if (cell) {
-        activeCells += 1;
-      }
-    });
-
-    return activeCells;
-  }
-
   updateCell(r, c) {
-    const cellCount = this.chkNeigh(r, c);
+    const cellCount = this.getNeighCellCount(r, c);
 
     if (cellCount < 2) {
       // console.log('lonely');
@@ -288,7 +312,7 @@ export default class Board {
 
   update() {
     // create shadow layout
-    this.nextLayout = cloneBd(this.layout);
+    this.nextLayout = Board.cloneBoard(this.layout);
 
     for (let i = 0; i < this.size; i += 1) {
       for (let j = 0; j < this.size; j += 1) {
@@ -296,12 +320,7 @@ export default class Board {
       }
     }
 
-    this.layout = cloneBd(this.nextLayout);
+    this.layout = Board.cloneBoard(this.nextLayout);
     this.gen += 1;
-  }
-
-  movePlayer(currCoor, targetCoor) {
-    this.setCell(currCoor.r, currCoor.c, 0);
-    this.setCell(targetCoor.r, targetCoor.c, 5);
   }
 }
