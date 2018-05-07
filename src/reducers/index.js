@@ -1,8 +1,8 @@
 import Board from '../classes/Board';
-import Sprites from '../components/_sprites';
+import Sprite from '../classes/Sprite';
 
 const board = new Board();
-const sprites = new Sprites();
+const sprites = new Sprite();
 
 board.initBoard();
 sprites.init(board);
@@ -18,7 +18,7 @@ const initState = {
     hp        : 100,
     xpToNxtLvl: 100,
     weapon    : sprites.weaponList[0],
-    dmg       : Sprites.getCurrDmg(sprites.weaponList[0], 1),
+    dmg       : Sprite.getPlayerDmg(sprites.weaponList[0], 1),
     playerLvl : 1,
     dungeonLvl: 1,
   },
@@ -107,7 +107,7 @@ const reducer = (state = initState, action) => {
   } else if (cellState === 2) {
     const monsterBaseXp = 10;
     const playerBaseXp  = 80;
-    const monsterIndex  = Sprites.getMonsterIndex(state.monsters, targetCellCoor);
+    const monsterIndex  = Sprite.getMonsterIndex(state.monsters, targetCellCoor);
     const monsterHP     = state.monsters[monsterIndex].hp - state.stats.dmg;
     const newMonsters   = state.monsters.filter((monster, index) => index !== monsterIndex);
     let newHP   = state.stats.hp;
@@ -141,13 +141,13 @@ const reducer = (state = initState, action) => {
           hp        : newHP,
           xpToNxtLvl: newXP,
           playerLvl : newLvl,
-          dmg       : Sprites.getCurrDmg(state.stats.weapon, newLvl),
+          dmg       : Sprite.getPlayerDmg(state.stats.weapon, newLvl),
         },
       };
     }
 
     // If monster not ded
-    newHP = state.stats.hp - Sprites.getMonsterDmg(state.stats.dungeonLvl);
+    newHP = state.stats.hp - Sprite.getMonsterDmg(state.stats.dungeonLvl);
 
     // If player ded
     if (newHP <= 0) {
@@ -199,7 +199,7 @@ const reducer = (state = initState, action) => {
       stats: {
         ...state.stats,
         weapon: sprites.getNextWeapon(state.stats.dungeonLvl),
-        dmg   : Sprites.getCurrDmg(sprites.getNextWeapon(state.stats.dungeonLvl), state.stats.playerLvl),
+        dmg   : Sprite.getPlayerDmg(sprites.getNextWeapon(state.stats.dungeonLvl), state.stats.playerLvl),
       },
     };
 
@@ -267,7 +267,7 @@ const reducer = (state = initState, action) => {
     }
 
     // If boss not ded
-    playerHP = state.stats.hp - Sprites.getMonsterDmg(8);
+    playerHP = state.stats.hp - Sprite.getMonsterDmg(8);
 
     // If player ded
     if (playerHP <= 0) {
