@@ -26,10 +26,23 @@ export const spriteConst = {
     },
   ],
   cell: {
-    free  : 0,
-    wall  : 1,
-    player: 5,
+    free   : 0,
+    wall   : 1,
+    monster: 2,
+    weapon : 3,
+    exit   : 4,
+    player : 5,
+    health : 6,
+    boss   : 7,
+    hidden : 8,
   },
+  maxLevel            : 5,
+  bossHP              : 500,
+  playerDmgMultiplier : 6,
+  monsterBaseHP       : 5,
+  monsterHPMultiplier : 20,
+  monsterBaseDmg      : 3,
+  monsterDmgMultiplier: 4,
 };
 
 export const gameConst = {
@@ -38,9 +51,9 @@ export const gameConst = {
 
 export const boardConst = {
   boardSize          : 100,
-  randomizeCount     : 7,
-  randomizerThreshold: 0.28,
+  scrambleRounds     : 7,
+  cellWallToFreeRatio: 0.28,
   playableAreaRatio  : 0.25,
-  fieldSizeX         : 60,
-  fieldSizeY         : 40,
+  displaySizeX       : 60,
+  displaySizeY       : 40,
 };

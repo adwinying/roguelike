@@ -1,15 +1,15 @@
-import Board from '../components/_maplogic';
+import Board from '../classes/Board';
 import Sprites from '../components/_sprites';
 
-const board = new Board(100);
+const board = new Board();
 const sprites = new Sprites();
 
-board.init();
+board.initBoard();
 sprites.init(board);
 
 const initState = {
   map: {
-    layout: board.getLayout(sprites.playerCoor, true),
+    layout: board.printMap(sprites.playerCoor, true),
   },
   coor: {
     player: sprites.playerCoor,
@@ -55,7 +55,7 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         map: {
-          layout: board.getLayout(state.coor.player, !state.isDarknessOn),
+          layout: board.printMap(state.coor.player, !state.isDarknessOn),
         },
         isDarknessOn: !state.isDarknessOn,
       };
@@ -96,7 +96,7 @@ const reducer = (state = initState, action) => {
     return {
       ...state,
       map: {
-        layout: board.getLayout(targetCellCoor, state.isDarknessOn),
+        layout: board.printMap(targetCellCoor, state.isDarknessOn),
       },
       coor: {
         player: targetCellCoor,
@@ -133,7 +133,7 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         map: {
-          layout: board.getLayout(currCellCoor, state.isDarknessOn),
+          layout: board.printMap(currCellCoor, state.isDarknessOn),
         },
         monsters: newMonsters,
         stats   : {
@@ -151,13 +151,13 @@ const reducer = (state = initState, action) => {
 
     // If player ded
     if (newHP <= 0) {
-      board.init();
+      board.initBoard();
       sprites.init(board);
 
       return {
         ...initState,
         map: {
-          layout: board.getLayout(sprites.playerCoor, state.isDarknessOn),
+          layout: board.printMap(sprites.playerCoor, state.isDarknessOn),
         },
         coor: {
           player: sprites.playerCoor,
@@ -191,7 +191,7 @@ const reducer = (state = initState, action) => {
     return {
       ...state,
       map: {
-        layout: board.getLayout(targetCellCoor, state.isDarknessOn),
+        layout: board.printMap(targetCellCoor, state.isDarknessOn),
       },
       coor: {
         player: targetCellCoor,
@@ -205,13 +205,13 @@ const reducer = (state = initState, action) => {
 
   // exit cell
   } else if (cellState === 4) {
-    board.init();
+    board.initBoard();
     sprites.init(board, state.stats.dungeonLvl + 1);
 
     return {
       ...state,
       map: {
-        layout: board.getLayout(sprites.playerCoor, state.isDarknessOn),
+        layout: board.printMap(sprites.playerCoor, state.isDarknessOn),
       },
       coor: {
         player: sprites.playerCoor,
@@ -230,7 +230,7 @@ const reducer = (state = initState, action) => {
     return {
       ...state,
       map: {
-        layout: board.getLayout(targetCellCoor, state.isDarknessOn),
+        layout: board.printMap(targetCellCoor, state.isDarknessOn),
       },
       coor: {
         player: targetCellCoor,
@@ -248,13 +248,13 @@ const reducer = (state = initState, action) => {
 
     // If boss ded
     if (bossHP <= 0) {
-      board.init();
+      board.initBoard();
       sprites.init(board);
 
       return {
         ...initState,
         map: {
-          layout: board.getLayout(sprites.playerCoor, state.isDarknessOn),
+          layout: board.printMap(sprites.playerCoor, state.isDarknessOn),
         },
         coor: {
           player: sprites.playerCoor,
@@ -271,13 +271,13 @@ const reducer = (state = initState, action) => {
 
     // If player ded
     if (playerHP <= 0) {
-      board.init();
+      board.initBoard();
       sprites.init(board);
 
       return {
         ...initState,
         map: {
-          layout: board.getLayout(sprites.playerCoor, state.isDarknessOn),
+          layout: board.printMap(sprites.playerCoor, state.isDarknessOn),
         },
         coor: {
           player: sprites.playerCoor,
