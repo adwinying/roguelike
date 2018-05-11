@@ -32,9 +32,9 @@ const Alert = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  showAlert  : state.showAlert,
-  isPlayerDed: state.isPlayerDed,
+const mapStateToProps = ({ showAlert, isPlayerDed }) => ({
+  showAlert,
+  isPlayerDed,
 });
 
 const mapDispatchToProps = dispatch => ({

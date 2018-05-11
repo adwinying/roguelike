@@ -32,8 +32,8 @@ const GameMap = ({ map, onPress }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  map: state.map,
+const mapStateToProps = ({ map }) => ({
+  map,
 });
 
 const mapDispatchToProps = dispatch => ({

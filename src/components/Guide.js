@@ -82,8 +82,8 @@ const Guide = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  isGuideEnabled: state.isGuideEnabled,
+const mapStateToProps = ({ isGuideEnabled }) => ({
+  isGuideEnabled,
 });
 
 const mapDispatchToProps = dispatch => ({

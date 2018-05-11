@@ -7,13 +7,6 @@ const { board } = game;
 const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
     // Manage popup alerts
-    case 'SHOW_ALERT':
-      return {
-        ...state,
-        showAlert  : true,
-        isPlayerDed: false,
-      };
-
     case 'HIDE_ALERT':
       return {
         ...state,
