@@ -139,6 +139,7 @@ class Game {
         return {
           monsters: newMonsters,
           player  : {
+            ...player,
             hp        : newHP,
             xpToNxtLvl: newXP,
             lvl       : newLvl,
