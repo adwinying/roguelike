@@ -150,6 +150,7 @@ class Game {
       return {
         monsters: newMonsters,
         player  : {
+          coor      : currCoor,
           xpToNxtLvl: newXP,
         },
       };
@@ -184,7 +185,8 @@ class Game {
     return {
       monsters: newMonsters,
       player  : {
-        hp: newHP,
+        coor: currCoor,
+        hp  : newHP,
       },
     };
   }
@@ -273,7 +275,8 @@ class Game {
         hp: bossHP,
       },
       player: {
-        hp: playerHP,
+        coor: currCoor,
+        hp  : playerHP,
       },
     };
   }

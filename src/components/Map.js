@@ -37,8 +37,8 @@ const mapStateToProps = ({ map }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onPress: (e) => {
-    switch (e.key) {
+  onPress: ({ key }) => {
+    switch (key) {
       case 'w':
       case 'ArrowUp':
         dispatch(movePlayer('UP'));

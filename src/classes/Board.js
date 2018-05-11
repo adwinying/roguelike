@@ -79,8 +79,19 @@ export default class Board {
         zoomedBoard.push([...zoomedCol]);
       }
 
-      for (let i = currRow - 6; i <= currRow + 6; i += 1) {
-        for (let j = currCol - 6; j <= currCol + 6; j += 1) {
+      /* eslint-disable no-multi-spaces */
+      const scanInitRow =
+        currRow - 6 < 0          ? 0             : currRow - 6;
+      const scanInitCol =
+        currCol - 6 < 0          ? 0             : currCol - 6;
+      const scanLastRow =
+        currRow + 6 >= this.size ? this.size - 1 : currRow + 6;
+      const scanLastCol =
+        currCol + 6 >= this.size ? this.size - 1 : currCol + 6;
+      /* eslint-enable no-multi-spaces */
+
+      for (let i = scanInitRow; i <= scanLastRow; i += 1) {
+        for (let j = scanInitCol; j <= scanLastCol; j += 1) {
           const targetCoor = { row: i, col: j };
 
           if (!Board.existsInCoorArray(targetCoor, cornerCells)) {
@@ -314,6 +325,15 @@ export default class Board {
    */
 
   getCell(row, col) {
+    if (
+      row < 0 ||
+      col < 0 ||
+      row >= this.size ||
+      col >= this.size
+    ) {
+      throw new Error('Row/Col out of bounds!');
+    }
+
     return this.layout[row][col];
   }
 
