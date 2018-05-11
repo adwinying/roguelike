@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 import { hideAlert } from '../actions';
 
 const Alert = (props) => {
-  let className = 'rogue-alert text-center alert alert-dismissible';
+  let className = 'rogue-alert text-center alert alert-dismissible ';
   let boldText  = '';
   let message   = '';
 
   if (props.showAlert) {
     className += ' active';
     if (props.isPlayerDed) {
-      className += ' alert-danger';
+      className += 'alert-danger';
       boldText = 'You Died.';
       message = ' Better luck next time!';
     } else {
-      className += ' alert-success';
+      className += 'alert-success';
       boldText = 'Congratulations.';
       message = ' You won!';
     }
