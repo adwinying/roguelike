@@ -8,7 +8,7 @@ import {
 
 const cellType = sprites.cell;
 
-export default class Game {
+class Game {
   constructor() {
     this.board = new Board();
     this.sprites = new Sprite();
@@ -36,7 +36,6 @@ export default class Game {
         return this.movePlayerToEmptyCell(
           currCoor,
           targetCoor,
-          player,
         );
 
       case cellType.wall:
@@ -95,23 +94,29 @@ export default class Game {
    */
 
 
-  movePlayerToEmptyCell(currCoor, targetCoor, player) {
+  movePlayerToEmptyCell(currCoor, targetCoor) {
     this.board.movePlayer(currCoor, targetCoor);
 
     return {
       player: {
-        ...player,
         coor: targetCoor,
       },
     };
   }
 
 
-  movePlayerToMonsterCell(currCoor, targetCoor, player, monsters, dungeonLvl) {
+  movePlayerToMonsterCell(
+    currCoor,
+    targetCoor,
+    player,
+    monsters,
+    dungeonLvl,
+  ) {
     const { monsterBaseXP, playerBaseXP } = params;
     const monsterIndex = Sprite.getMonsterIndex(monsters, targetCoor);
     const monsterHP    = monsters[monsterIndex].hp - player.dmg;
-    const newMonsters  = monsters.filter((monster, index) => index !== monsterIndex);
+    const newMonsters  = monsters.filter((monster, index) =>
+      index !== monsterIndex);
 
     // console.log(monsterIndex, monsterHP, newMonsters);
 
@@ -134,7 +139,6 @@ export default class Game {
         return {
           monsters: newMonsters,
           player  : {
-            ...player,
             hp        : newHP,
             xpToNxtLvl: newXP,
             lvl       : newLvl,
@@ -146,7 +150,6 @@ export default class Game {
       return {
         monsters: newMonsters,
         player  : {
-          ...player,
           xpToNxtLvl: newXP,
         },
       };
@@ -181,7 +184,6 @@ export default class Game {
     return {
       monsters: newMonsters,
       player  : {
-        ...player,
         hp: newHP,
       },
     };
@@ -195,7 +197,6 @@ export default class Game {
 
     return {
       player: {
-        ...player,
         coor  : targetCoor,
         weapon: newWeapon,
         dmg   : Sprite.getPlayerDmg(newWeapon, player.lvl),
@@ -210,7 +211,6 @@ export default class Game {
 
     return {
       player: {
-        ...player,
         coor: this.sprites.playerCoor,
       },
       dungeonLvl: newDungeonLvl,
@@ -225,7 +225,6 @@ export default class Game {
 
     return {
       player: {
-        ...player,
         coor: targetCoor,
         hp  : player.hp + params.healthCellHP,
       },
@@ -259,7 +258,6 @@ export default class Game {
 
       return {
         player: {
-          ...player,
           coor: this.sprites.playerCoor,
         },
         monsters   : this.sprites.compileMonsterData(1),
@@ -275,7 +273,6 @@ export default class Game {
         hp: bossHP,
       },
       player: {
-        ...player,
         hp: playerHP,
       },
     };
@@ -287,3 +284,5 @@ export default class Game {
     this.sprites.init(this.board, dungeonLvl);
   }
 }
+
+export default new Game();

@@ -1,15 +1,16 @@
-import Game from '../classes/Game';
+import game from '../classes/Game';
 import Sprite from '../classes/Sprite';
 
-const game = new Game();
+import { gameConst as params } from '../constants';
+
 const { board, sprites } = game;
 
 const initState = {
   map   : board.printMap(sprites.playerCoor, true),
   player: {
     coor      : sprites.playerCoor,
-    hp        : 100,
-    xpToNxtLvl: 100,
+    hp        : params.initial.playerHP,
+    xpToNxtLvl: params.initial.xpToNxtLvl,
     weapon    : sprites.weaponList[0],
     dmg       : Sprite.getPlayerDmg(sprites.weaponList[0], 1),
     lvl       : 1,
@@ -23,12 +24,8 @@ const initState = {
   isGuideEnabled: false,
 };
 
-const reducer = (state = initState, action) => {
-  let targetCellCoor = {};
-  const currCellCoor = state.player.coor;
-  const { row, col } = state.player.coor;
-
-  switch (action.type) {
+const reducer = (state = initState, { type, payload }) => {
+  switch (type) {
     // Manage popup alerts
     case 'SHOW_ALERT':
       return {
@@ -61,50 +58,26 @@ const reducer = (state = initState, action) => {
         isGuideEnabled: !state.isGuideEnabled,
       };
 
-    // Manage user controls
-    case 'MOVE_UP':
-      targetCellCoor = { ...currCellCoor, row: row - 1 };
-      break;
+    // Move player
+    case 'MOVE_PLAYER': {
+      const stateToUse = payload.isPlayerDed ? initState : state;
 
-    case 'MOVE_DOWN':
-      targetCellCoor = { ...currCellCoor, row: row + 1 };
-      break;
-
-    case 'MOVE_LEFT':
-      targetCellCoor = { ...currCellCoor, col: col - 1 };
-      break;
-
-    case 'MOVE_RIGHT':
-      targetCellCoor = { ...currCellCoor, col: col + 1 };
-      break;
-
+      return {
+        ...stateToUse,
+        ...payload,
+        map: board.printMap(
+          payload.player.coor,
+          stateToUse.isDarknessOn,
+        ),
+        player: {
+          ...stateToUse.player,
+          ...payload.player,
+        },
+      };
+    }
     default:
       return state;
   }
-
-  const moveResults = game.movePlayer(
-    currCellCoor,
-    targetCellCoor,
-    state.player,
-    state.monsters,
-    state.boss,
-    state.dungeonLvl,
-  );
-
-  const stateToUse = moveResults.isPlayerDed ? initState : state;
-
-  return {
-    ...stateToUse,
-    ...moveResults,
-    map: board.printMap(
-      moveResults.player.coor,
-      stateToUse.isDarknessOn,
-    ),
-    player: {
-      ...stateToUse.player,
-      ...moveResults.player,
-    },
-  };
 };
 
 export default reducer;

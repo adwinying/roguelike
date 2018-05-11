@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { keyPress, toggleDarkness, toggleGuide } from '../actions';
+import { movePlayer, toggleDarkness, toggleGuide } from '../actions';
 
 
 const GameMap = ({ map, onPress }) => {
@@ -41,22 +41,22 @@ const mapDispatchToProps = dispatch => ({
     switch (e.key) {
       case 'w':
       case 'ArrowUp':
-        dispatch(keyPress('MOVE_UP'));
+        dispatch(movePlayer('UP'));
         break;
 
       case 's':
       case 'ArrowDown':
-        dispatch(keyPress('MOVE_DOWN'));
+        dispatch(movePlayer('DOWN'));
         break;
 
       case 'a':
       case 'ArrowLeft':
-        dispatch(keyPress('MOVE_LEFT'));
+        dispatch(movePlayer('LEFT'));
         break;
 
       case 'd':
       case 'ArrowRight':
-        dispatch(keyPress('MOVE_RIGHT'));
+        dispatch(movePlayer('RIGHT'));
         break;
 
       case 'f':

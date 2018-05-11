@@ -50,6 +50,10 @@ export const gameConst = {
   monsterBaseXP: 10,
   playerBaseXP : 80,
   healthCellHP : 20,
+  initial      : {
+    playerHP  : 100,
+    xpToNxtLvl: 100,
+  },
 };
 
 export const boardConst = {
