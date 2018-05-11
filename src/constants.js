@@ -36,7 +36,6 @@ export const spriteConst = {
     boss   : 7,
     hidden : 8,
   },
-  maxLevel            : 5,
   bossHP              : 500,
   bossDmg             : 8, // Dmg equivalent to monster in lvl 8
   playerDmgMultiplier : 6,
@@ -47,12 +46,13 @@ export const spriteConst = {
 };
 
 export const gameConst = {
-  monsterBaseXP: 10,
-  playerBaseXP : 80,
-  healthCellHP : 20,
+  maxLevel     : 5,
+  monsterBaseXP: 10, // Base XP given when monster defeated
+  playerBaseXP : 80, // Base XP needed to level up
+  healthCellHP : 20, // HP given when player obtains health
   initial      : {
-    playerHP  : 100,
-    xpToNxtLvl: 100,
+    playerHP: 100,
+    playerXP: 100,
   },
 };
 

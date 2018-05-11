@@ -13,7 +13,7 @@ export const initialState = {
   player: {
     coor      : sprites.playerCoor,
     hp        : params.initial.playerHP,
-    xpToNxtLvl: params.initial.xpToNxtLvl,
+    xpToNxtLvl: params.initial.playerXP,
     weapon    : sprites.weaponList[0],
     dmg       : Sprite.getPlayerDmg(sprites.weaponList[0], 1),
     lvl       : 1,

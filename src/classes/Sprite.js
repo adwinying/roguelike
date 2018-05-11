@@ -1,4 +1,7 @@
-import { spriteConst as params } from '../constants';
+import {
+  spriteConst as params,
+  gameConst as game,
+} from '../constants';
 
 const cellType = params.cell;
 
@@ -41,7 +44,7 @@ export default class Sprite {
     this.setWeapon(board, weaponCoor);
     this.setPlayer(board, playerCoor);
 
-    if (dungeonLvl === params.maxLevel) {
+    if (dungeonLvl === game.maxLevel) {
       this.setBoss(board, endCoor);
     } else {
       this.setExit(board, endCoor);
