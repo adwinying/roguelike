@@ -1,30 +1,10 @@
 import game from '../classes/Game';
-import Sprite from '../classes/Sprite';
+import { initialState } from '../store';
 
-import { gameConst as params } from '../constants';
 
-const { board, sprites } = game;
+const { board } = game;
 
-const initState = {
-  map   : board.printMap(sprites.playerCoor, true),
-  player: {
-    coor      : sprites.playerCoor,
-    hp        : params.initial.playerHP,
-    xpToNxtLvl: params.initial.xpToNxtLvl,
-    weapon    : sprites.weaponList[0],
-    dmg       : Sprite.getPlayerDmg(sprites.weaponList[0], 1),
-    lvl       : 1,
-  },
-  dungeonLvl    : 1,
-  monsters      : sprites.compileMonsterData(1),
-  boss          : sprites.compileBossData(1),
-  showAlert     : false,
-  isPlayerDed   : false,
-  isDarknessOn  : true,
-  isGuideEnabled: false,
-};
-
-const reducer = (state = initState, { type, payload }) => {
+const reducer = (state = initialState, { type, payload }) => {
   switch (type) {
     // Manage popup alerts
     case 'SHOW_ALERT':
@@ -60,7 +40,7 @@ const reducer = (state = initState, { type, payload }) => {
 
     // Move player
     case 'MOVE_PLAYER': {
-      const stateToUse = payload.isPlayerDed ? initState : state;
+      const stateToUse = payload.isPlayerDed ? initialState : state;
 
       return {
         ...stateToUse,

@@ -1,4 +1,4 @@
-import store from '../index';
+import store from '../store';
 import game from '../classes/Game';
 
 export const movePlayer = (direction) => {
