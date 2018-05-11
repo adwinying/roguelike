@@ -10,44 +10,53 @@ export default class Sprite {
     this.bossCoor = {};
     this.healthCoor = [];
     this.monsterCoor = [];
+    this.monsters = [];
     this.weaponList = params.weapons;
   }
 
 
-  init(game, dungeonLvl) {
+  init(board, dungeonLvl) {
     const indexArr = [];
     this.monsterCoor = [];
     this.healthCoor = [];
 
     while (indexArr.length < 20) {
-      const randNum = Math.floor(Math.random() * game.playArea.length);
+      const randNum = Math.floor(Math.random() * board.playArea.length);
 
       if (indexArr.indexOf(randNum) === -1) {
         indexArr.push(randNum);
       }
     }
 
-    const spriteCoors = indexArr.map(index => game.playArea[index]);
+    const spriteCoors  = indexArr.map(index =>
+      board.playArea[index]);
+    const monsterCoors = spriteCoors.slice(0, 10);
+    const healthCoors  = spriteCoors.slice(10, 17);
+    const weaponCoor   = spriteCoors[17];
+    const playerCoor   = spriteCoors[18];
+    const endCoor      = spriteCoors[19];
 
-    this.setMonsters(game, spriteCoors.slice(0, 10));
-    this.setHealths(game, spriteCoors.slice(10, 17));
-    this.setWeapon(game, spriteCoors[17]);
-    this.setPlayer(game, spriteCoors[18]);
+    this.setMonsters(board, monsterCoors);
+    this.setHealths(board, healthCoors);
+    this.setWeapon(board, weaponCoor);
+    this.setPlayer(board, playerCoor);
 
     if (dungeonLvl === params.maxLevel) {
-      this.setBoss(game, spriteCoors[19]);
+      this.setBoss(board, endCoor);
     } else {
-      this.setExit(game, spriteCoors[19]);
+      this.setExit(board, endCoor);
     }
   }
 
 
   compileMonsterData(dungeonLvl) {
-    return this.monsterCoor.map(coor => ({
+    this.monsters = this.monsterCoor.map(coor => ({
       ...coor,
       hp: params.monsterBaseHP +
         (params.monsterHPMultiplier * dungeonLvl),
     }));
+
+    return this.monsters;
   }
 
 
@@ -68,56 +77,56 @@ export default class Sprite {
    * Private methods
    */
 
-  setMonsters(game, coors) {
+  setMonsters(board, coors) {
     coors.forEach((coor) => {
       const { row, col } = coor;
 
-      game.setCell(row, col, cellType.monster);
+      board.setCell(row, col, cellType.monster);
       this.monsterCoor.push(coor);
     });
   }
 
 
-  setHealths(game, coors) {
+  setHealths(board, coors) {
     coors.forEach((coor) => {
       const { row, col } = coor;
 
-      game.setCell(row, col, cellType.monster);
+      board.setCell(row, col, cellType.monster);
       this.monsterCoor.push(coor);
-      game.setCell(row, col, cellType.health);
+      board.setCell(row, col, cellType.health);
       this.healthCoor.push(coor);
     });
   }
 
 
-  setWeapon(game, coor) {
+  setWeapon(board, coor) {
     const { row, col } = coor;
 
-    game.setCell(row, col, cellType.weapon);
+    board.setCell(row, col, cellType.weapon);
     this.weaponCoor = coor;
   }
 
 
-  setPlayer(game, coor) {
+  setPlayer(board, coor) {
     const { row, col } = coor;
 
-    game.setCell(row, col, cellType.player);
+    board.setCell(row, col, cellType.player);
     this.playerCoor = coor;
   }
 
 
-  setExit(game, coor) {
+  setExit(board, coor) {
     const { row, col } = coor;
 
-    game.setCell(row, col, cellType.exit);
+    board.setCell(row, col, cellType.exit);
     this.exitCoor = coor;
   }
 
 
-  setBoss(game, coor) {
+  setBoss(board, coor) {
     const { row, col } = coor;
 
-    game.setCell(row, col, cellType.boss);
+    board.setCell(row, col, cellType.boss);
     this.bossCoor = coor;
   }
 

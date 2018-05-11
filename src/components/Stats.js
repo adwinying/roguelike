@@ -33,13 +33,13 @@ const Stats = props => (
   </div>
 );
 
-const mapStateToProps = ({ stats }) => ({
-  hp        : stats.hp,
-  xp        : stats.xpToNxtLvl,
-  weapon    : stats.weapon.name,
-  dmg       : stats.dmg,
-  playerLvl : stats.playerLvl,
-  dungeonLvl: stats.dungeonLvl,
+const mapStateToProps = ({ player, dungeonLvl }) => ({
+  hp       : player.hp,
+  xp       : player.xpToNxtLvl,
+  weapon   : player.weapon.name,
+  dmg      : player.dmg,
+  playerLvl: player.lvl,
+  dungeonLvl,
 });
 
 const StatsContainer = connect(mapStateToProps)(Stats);

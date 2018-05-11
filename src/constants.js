@@ -26,7 +26,7 @@ export const spriteConst = {
     },
   ],
   cell: {
-    free   : 0,
+    empty  : 0,
     wall   : 1,
     monster: 2,
     weapon : 3,
@@ -38,6 +38,7 @@ export const spriteConst = {
   },
   maxLevel            : 5,
   bossHP              : 500,
+  bossDmg             : 8, // Dmg equivalent to monster in lvl 8
   playerDmgMultiplier : 6,
   monsterBaseHP       : 5,
   monsterHPMultiplier : 20,
@@ -46,7 +47,9 @@ export const spriteConst = {
 };
 
 export const gameConst = {
-
+  monsterBaseXP: 10,
+  playerBaseXP : 80,
+  healthCellHP : 20,
 };
 
 export const boardConst = {

@@ -33,7 +33,7 @@ const GameMap = ({ map, onPress }) => {
 };
 
 const mapStateToProps = state => ({
-  map: state.map.layout,
+  map: state.map,
 });
 
 const mapDispatchToProps = dispatch => ({

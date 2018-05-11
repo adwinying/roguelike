@@ -128,7 +128,7 @@ export default class Board {
 
     while (colArr.length < this.size) {
       colArr.push(Math.random() < params.cellWallToFreeRatio ?
-        cellType.wall : cellType.free);
+        cellType.wall : cellType.empty);
     }
 
     return colArr;
@@ -155,7 +155,7 @@ export default class Board {
 
     if (cellCount < 2) {
       // lonely cell
-      this.nextLayout[row][col] = cellType.free;
+      this.nextLayout[row][col] = cellType.empty;
     } else if (cellCount >= 4) {
       // crowded cell
       this.nextLayout[row][col] = cellType.wall;
@@ -205,7 +205,7 @@ export default class Board {
   getFirstAvailCell() {
     for (let i = Math.ceil(this.size / 10); i < this.size; i += 1) {
       for (let j = Math.ceil(this.size / 10); j < this.size; j += 1) {
-        if (this.getCell(i, j) === cellType.free) {
+        if (this.getCell(i, j) === cellType.empty) {
           return { r: i, c: j };
         }
       }
@@ -218,7 +218,7 @@ export default class Board {
   getPlayableArea(currRow, currCol) {
     // If target-color is equal to replacement-color, return.
     // If the color of node is not equal to target-color, return.
-    if (this.getCell(currRow, currCol) !== cellType.free) {
+    if (this.getCell(currRow, currCol) !== cellType.empty) {
       return;
     }
 
@@ -260,13 +260,13 @@ export default class Board {
     this.layout = colArr.map(() => [...colArr]);
 
     this.playArea.forEach((cell) => {
-      this.setCell(cell.row, cell.col, cellType.free);
+      this.setCell(cell.row, cell.col, cellType.empty);
     });
   }
 
 
   movePlayer(currCoor, targetCoor) {
-    this.setCell(currCoor.row, currCoor.col, cellType.free);
+    this.setCell(currCoor.row, currCoor.col, cellType.empty);
     this.setCell(targetCoor.row, targetCoor.col, cellType.player);
   }
 
