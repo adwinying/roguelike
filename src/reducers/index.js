@@ -33,7 +33,8 @@ const reducer = (state = initialState, { type, payload }) => {
 
     // Move player
     case 'MOVE_PLAYER': {
-      const stateToUse = payload.isPlayerDed ? initialState : state;
+      const stateToUse = payload.showAlert ?
+        initialState : state;
 
       return {
         ...stateToUse,

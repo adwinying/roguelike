@@ -79,15 +79,16 @@ export default class Board {
         zoomedBoard.push([...zoomedCol]);
       }
 
+      const maxIndex = this.size - 1;
+      const topBound = currRow - 6;
+      const botBound = currRow + 6;
+      const lftBound = currCol - 6;
+      const rgtBound = currCol + 6;
       /* eslint-disable no-multi-spaces */
-      const scanInitRow =
-        currRow - 6 < 0          ? 0             : currRow - 6;
-      const scanInitCol =
-        currCol - 6 < 0          ? 0             : currCol - 6;
-      const scanLastRow =
-        currRow + 6 >= this.size ? this.size - 1 : currRow + 6;
-      const scanLastCol =
-        currCol + 6 >= this.size ? this.size - 1 : currCol + 6;
+      const scanInitRow = topBound < 0          ? 0        : topBound;
+      const scanInitCol = lftBound < 0          ? 0        : lftBound;
+      const scanLastRow = botBound >= this.size ? maxIndex : botBound;
+      const scanLastCol = rgtBound >= this.size ? maxIndex : rgtBound;
       /* eslint-enable no-multi-spaces */
 
       for (let i = scanInitRow; i <= scanLastRow; i += 1) {
@@ -127,6 +128,7 @@ export default class Board {
 
   newBoard() {
     this.layout = [];
+    this.playArea = [];
 
     while (this.layout.length < this.size) {
       this.layout.push(this.newRandomCol());
