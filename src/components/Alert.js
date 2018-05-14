@@ -8,7 +8,7 @@ const Alert = (props) => {
   let message   = '';
 
   if (props.showAlert) {
-    className += ' active';
+    className += ' active ';
     if (props.isPlayerDed) {
       className += 'alert-danger';
       boldText = 'You Died.';
